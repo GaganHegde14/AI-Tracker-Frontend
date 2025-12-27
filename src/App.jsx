@@ -10,11 +10,11 @@ import EditTaskPage from "./Pages/EditTaskPage";
 import ProfilePage from "./Pages/ProfilePage";
 import AnalyticsPage from "./Pages/AnalyticsPage";
 import AiInsightsPage from "./Pages/AiInsightsPage";
-import InsightsPage from "./pages/InsightsPage";
-import PremiumPage from "./pages/PremiumPage";
-import FocusPage from "./pages/FocusPage";
-import LeaderboardPage from "./pages/LeaderboardPage";
-import SupportPage from "./pages/SupportPage";
+import InsightsPage from "./Pages/InsightsPage";
+import PremiumPage from "./Pages/PremiumPage";
+import FocusPage from "./Pages/FocusPage";
+import LeaderboardPage from "./Pages/LeaderboardPage";
+import SupportPage from "./Pages/SupportPage";
 import NotFoundPage from "./Pages/NotFoundPage";
 import LandingPage from "./Pages/LandingPage";
 
