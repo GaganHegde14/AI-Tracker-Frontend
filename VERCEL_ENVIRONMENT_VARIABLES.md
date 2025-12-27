@@ -7,10 +7,12 @@ To fix the API connection issues, you need to configure these environment variab
 ### Required Environment Variables:
 
 1. **VITE_API_BASE_URL**
+
    - Value: `https://ai-tracker-backend.onrender.com`
    - This is your deployed backend URL
 
-2. **VITE_BACKEND_URL** 
+2. **VITE_BACKEND_URL**
+
    - Value: `https://ai-tracker-backend.onrender.com`
    - Backup environment variable for API calls
 
@@ -27,9 +29,14 @@ To fix the API connection issues, you need to configure these environment variab
 5. Redeploy your application
 
 ### Test after setup:
+
 - Tasks should sync properly after completion
 - Profile page should show correct level and task count
 - No more "Network Error" or "ERR_CONNECTION_REFUSED" errors
+- API endpoints will be: 
+  - `GET /level` - Fetch user level
+  - `PUT /level` - Update user level
+  - `POST /level/increment` - Increment tasks completed
 
 **Last Updated:** December 27, 2025
 **Backend URL:** https://ai-tracker-backend.onrender.com
