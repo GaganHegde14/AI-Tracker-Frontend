@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../Components/Layout";
-import ComingSoonModal from "../components/ComingSoonModal";
+import ComingSoonModal from "../Components/ComingSoonModal";
 import {
   BarChart,
   PieChart,

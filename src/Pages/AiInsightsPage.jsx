@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Layout from "../Components/Layout";
 import ConfirmationModal from "../Components/ConfirmationModal";
-import UsageLimitModal from "../components/UsageLimitModal";
+import UsageLimitModal from "../Components/UsageLimitModal";
 import {
   Sparkles,
   Brain,
