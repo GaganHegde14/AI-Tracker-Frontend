@@ -28,6 +28,9 @@ import ConfirmationModal from "../Components/ConfirmationModal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useTask } from "../context/TaskContext";
+
+// Base URL for API calls
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 import { useNotification } from "../context/NotificationContext";
 
 const ProfilePage = () => {
@@ -201,7 +204,7 @@ const ProfilePage = () => {
   const fetchUserLevel = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:3000/auth/level", {
+      const response = await axios.get(`${API_BASE_URL}/auth/level`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -226,7 +229,7 @@ const ProfilePage = () => {
       const token = localStorage.getItem("token");
 
       await axios.put(
-        "http://localhost:3000/auth/level",
+        `${API_BASE_URL}/auth/level`,
         {
           level: level.level,
           tasksCompleted: newCount,
