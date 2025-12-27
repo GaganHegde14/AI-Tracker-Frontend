@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useNotification } from "../context/NotificationContext";
-import api from "../services/api";
+import api, { wakeUpServer } from "../services/api";
 import Logo from "../Components/Logo";
 import PasswordStrengthIndicator from "../Components/PasswordStrengthIndicator";
 import SuccessAnimation from "../Components/SuccessAnimation";
@@ -98,7 +98,37 @@ const RegisterPage = () => {
 
     try {
       const { confirmPassword, ...submitData } = formData;
-      const response = await api.post("/register", submitData);
+      
+      // First, try to wake up the server if it's sleeping (Render free tier)
+      showNotification("Connecting to server...", "info");
+      
+      let response;
+      let retryCount = 0;
+      const maxRetries = 2;
+      
+      while (retryCount <= maxRetries) {
+        try {
+          if (retryCount > 0) {
+            showNotification(`Retrying... (attempt ${retryCount + 1})`, "info");
+            // Wait a moment before retry
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+          
+          response = await api.post("/register", submitData);
+          break; // Success, exit retry loop
+        } catch (error) {
+          retryCount++;
+          
+          if (error.code === 'ECONNABORTED' && retryCount <= maxRetries) {
+            showNotification("Server is starting up, retrying...", "info");
+            // Try to wake up server on timeout
+            await wakeUpServer();
+            continue; // Retry
+          } else {
+            throw error; // Re-throw if it's not a timeout or we've exceeded retries
+          }
+        }
+      }
 
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token);
