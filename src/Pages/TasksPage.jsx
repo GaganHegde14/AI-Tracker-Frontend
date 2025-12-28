@@ -106,30 +106,17 @@ const TasksPage = () => {
 
   const handleMarkComplete = async () => {
     console.log("🚀 BUTTON CLICKED - handleMarkComplete called!");
-
+    
     try {
       console.log("Marking task as complete:", selectedTask);
 
-      // Create updated task data with all required fields and status changed to 'completed'
-      const updatedTask = {
-        title: selectedTask.title,
-        description: selectedTask.description,
-        dueDate: selectedTask.dueDate,
-        priority: selectedTask.priority,
-        steps: selectedTask.steps || [],
-        timeEstimate: selectedTask.timeEstimate,
-        improvedText: selectedTask.improvedText || "",
-        status: "completed", // Change to completed
-      };
-
-      console.log("Sending updated task:", updatedTask);
-
+      // Use the new simplified endpoint that just requires task ID
       await axios
         .put(
-          `${import.meta.env.VITE_BACKEND_URL.replace(/\/$/, "")}/task/edit/${
+          `${import.meta.env.VITE_BACKEND_URL.replace(/\/$/, "")}/task/complete/${
             selectedTask._id
           }`,
-          updatedTask,
+          {}, // Empty body since we only need the task ID
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -152,9 +139,7 @@ const TasksPage = () => {
     } catch (error) {
       console.error("❌ Catch error marking task as complete:", error);
     }
-  };
-
-  const handleEditTask = () => {
+  };  const handleEditTask = () => {
     setSelectedTask();
     navigate("/edit-task", { state: { task: selectedTask } });
   };
