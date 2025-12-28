@@ -105,11 +105,7 @@ const TasksPage = () => {
   };
 
   const handleMarkComplete = async () => {
-    console.log("🚀 BUTTON CLICKED - handleMarkComplete called!");
-
     try {
-      console.log("Marking task as complete:", selectedTask);
-
       // Use the new simplified endpoint that just requires task ID
       await axios
         .put(
@@ -125,20 +121,17 @@ const TasksPage = () => {
           }
         )
         .then((res) => {
-          console.log("Task completion response:", res);
           if (res.status === 200) {
-            console.log("✅ Task marked as complete successfully!");
             // Close modal and reload to show updated task
             setSelectedTask(null);
             window.location.reload();
           }
         })
         .catch((err) => {
-          console.error("❌ Error marking task as complete:", err);
-          console.error("Error response:", err.response?.data);
+          console.error("Error marking task as complete:", err);
         });
     } catch (error) {
-      console.error("❌ Catch error marking task as complete:", error);
+      console.error("Error marking task as complete:", error);
     }
   };
   const handleEditTask = () => {
