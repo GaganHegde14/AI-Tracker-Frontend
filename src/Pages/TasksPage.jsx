@@ -106,16 +106,17 @@ const TasksPage = () => {
 
   const handleMarkComplete = async () => {
     console.log("🚀 BUTTON CLICKED - handleMarkComplete called!");
-    
+
     try {
       console.log("Marking task as complete:", selectedTask);
 
       // Use the new simplified endpoint that just requires task ID
       await axios
         .put(
-          `${import.meta.env.VITE_BACKEND_URL.replace(/\/$/, "")}/task/complete/${
-            selectedTask._id
-          }`,
+          `${import.meta.env.VITE_BACKEND_URL.replace(
+            /\/$/,
+            ""
+          )}/task/complete/${selectedTask._id}`,
           {}, // Empty body since we only need the task ID
           {
             headers: {
@@ -139,7 +140,8 @@ const TasksPage = () => {
     } catch (error) {
       console.error("❌ Catch error marking task as complete:", error);
     }
-  };  const handleEditTask = () => {
+  };
+  const handleEditTask = () => {
     setSelectedTask();
     navigate("/edit-task", { state: { task: selectedTask } });
   };
@@ -425,8 +427,7 @@ const TasksPage = () => {
               </button>
 
               {/* Show Mark Complete button only for incomplete tasks */}
-              {selectedTask.status !== "completed" &&
-                selectedTask.status !== "Completed" && (
+              {selectedTask.status !== "Completed" && (
                   <button
                     onClick={handleMarkComplete}
                     className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white text-sm font-bold rounded-xl shadow-lg transition-all transform hover:scale-[1.02] active:scale-[0.98]"
