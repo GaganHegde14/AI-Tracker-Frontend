@@ -131,9 +131,21 @@ const RegisterPage = () => {
       }
 
       if (response.status === 200) {
-        const { userId, email, type } = response.data;
+        const { token, user, type } = response.data;
 
-        if (type === "registration_complete") {
+        if (type === "registration_complete_with_login" && token) {
+          // Automatic login after registration
+          localStorage.setItem("token", token);
+          window.dispatchEvent(new Event("authChange"));
+          
+          showNotification(
+            "Registration successful! Welcome to AI Task Manager!",
+            "success"
+          );
+          
+          // Redirect to dashboard
+          navigate("/dashboard");
+        } else if (type === "registration_complete") {
           // Direct registration success - redirect to login
           showNotification(
             "Registration successful! Please log in with your credentials.",
