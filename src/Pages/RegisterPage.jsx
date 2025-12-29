@@ -151,23 +151,23 @@ const RegisterPage = () => {
           // Direct login after OTP verification
           localStorage.setItem("token", token);
           window.dispatchEvent(new Event("authChange"));
-          
+
           showNotification(
             "Email verified successfully! Welcome to AI Task Manager!",
             "success"
           );
-          
+
           navigate("/dashboard");
         } else if (type === "registration_complete_with_login" && token) {
           // Automatic login after registration (no OTP)
           localStorage.setItem("token", token);
           window.dispatchEvent(new Event("authChange"));
-          
+
           showNotification(
             "Registration successful! Welcome to AI Task Manager!",
             "success"
           );
-          
+
           navigate("/dashboard");
         } else {
           // Fallback for old registration flow
