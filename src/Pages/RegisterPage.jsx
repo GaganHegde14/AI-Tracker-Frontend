@@ -133,7 +133,15 @@ const RegisterPage = () => {
       if (response.status === 200) {
         const { userId, email, type } = response.data;
 
-        if (type === "otp_sent" && userId) {
+        if (type === "registration_complete") {
+          // Direct registration success - redirect to login
+          showNotification(
+            "Registration successful! Please log in with your credentials.",
+            "success"
+          );
+          
+          navigate("/login");
+        } else if (type === "otp_sent" && userId) {
           // Redirect to email verification page
           showNotification(
             "Registration successful! Check your email for verification code.",
@@ -148,7 +156,7 @@ const RegisterPage = () => {
             },
           });
         } else {
-          // Fallback for old registration flow (shouldn't happen with new backend)
+          // Fallback for old registration flow
           localStorage.setItem("token", response.data.token);
           window.dispatchEvent(new Event("authChange"));
           setShowSuccess(true);
