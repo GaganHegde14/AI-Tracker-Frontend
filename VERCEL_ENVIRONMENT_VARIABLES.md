@@ -33,7 +33,7 @@ To fix the API connection issues, you need to configure these environment variab
 - Tasks should sync properly after completion
 - Profile page should show correct level and task count
 - No more "Network Error" or "ERR_CONNECTION_REFUSED" errors
-- API endpoints will be: 
+- API endpoints will be:
   - `GET /level` - Fetch user level
   - `PUT /level` - Update user level
   - `POST /level/increment` - Increment tasks completed

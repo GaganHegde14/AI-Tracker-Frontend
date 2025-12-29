@@ -98,28 +98,28 @@ const RegisterPage = () => {
 
     try {
       const { confirmPassword, ...submitData } = formData;
-      
+
       // First, try to wake up the server if it's sleeping (Render free tier)
-      showNotification("Connecting to server...", "info");
-      
+      showNotification("Creating your account...", "info");
+
       let response;
       let retryCount = 0;
       const maxRetries = 2;
-      
+
       while (retryCount <= maxRetries) {
         try {
           if (retryCount > 0) {
             showNotification(`Retrying... (attempt ${retryCount + 1})`, "info");
             // Wait a moment before retry
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise((resolve) => setTimeout(resolve, 2000));
           }
-          
+
           response = await api.post("/register", submitData);
           break; // Success, exit retry loop
         } catch (error) {
           retryCount++;
-          
-          if (error.code === 'ECONNABORTED' && retryCount <= maxRetries) {
+
+          if (error.code === "ECONNABORTED" && retryCount <= maxRetries) {
             showNotification("Server is starting up, retrying...", "info");
             // Try to wake up server on timeout
             await wakeUpServer();
@@ -131,18 +131,48 @@ const RegisterPage = () => {
       }
 
       if (response.status === 200) {
-        localStorage.setItem("token", response.data.token);
+        const { userId, email, type } = response.data;
 
-        // Dispatch custom event to notify App component of auth change
-        window.dispatchEvent(new Event("authChange"));
+        if (type === "otp_sent" && userId) {
+          // Redirect to email verification page
+          showNotification(
+            "Registration successful! Check your email for verification code.",
+            "success"
+          );
 
-        setShowSuccess(true);
+          navigate("/verify-email", {
+            state: {
+              userId,
+              email,
+              userName: formData.name,
+            },
+          });
+        } else {
+          // Fallback for old registration flow (shouldn't happen with new backend)
+          localStorage.setItem("token", response.data.token);
+          window.dispatchEvent(new Event("authChange"));
+          setShowSuccess(true);
+        }
       }
     } catch (error) {
-      console.log(error);
-      const errorMessage =
-        error.response?.data?.message ||
-        "Registration failed. Please try again.";
+      console.error("Registration error:", error);
+
+      const errorData = error.response?.data;
+      let errorMessage = "Registration failed. Please try again.";
+
+      // Handle specific error types
+      if (errorData?.type === "domain_not_allowed") {
+        errorMessage =
+          errorData.message ||
+          "Please use a verified email from major providers (Gmail, Yahoo, Outlook, etc.). Temporary emails are not allowed.";
+        setFormErrors({ email: "Invalid email domain" });
+      } else if (errorData?.field) {
+        errorMessage = errorData.message;
+        setFormErrors({ [errorData.field]: errorData.message });
+      } else {
+        errorMessage = errorData?.message || errorMessage;
+      }
+
       showNotification(errorMessage, "error");
     } finally {
       setIsLoading(false);
