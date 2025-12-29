@@ -131,29 +131,9 @@ const RegisterPage = () => {
       }
 
       if (response.status === 200) {
-        const { token, user, type } = response.data;
+        const { userId, email, type, token, user } = response.data;
 
-        if (type === "registration_complete_with_login" && token) {
-          // Automatic login after registration
-          localStorage.setItem("token", token);
-          window.dispatchEvent(new Event("authChange"));
-          
-          showNotification(
-            "Registration successful! Welcome to AI Task Manager!",
-            "success"
-          );
-          
-          // Redirect to dashboard
-          navigate("/dashboard");
-        } else if (type === "registration_complete") {
-          // Direct registration success - redirect to login
-          showNotification(
-            "Registration successful! Please log in with your credentials.",
-            "success"
-          );
-          
-          navigate("/login");
-        } else if (type === "otp_sent" && userId) {
+        if (type === "otp_sent" && userId) {
           // Redirect to email verification page
           showNotification(
             "Registration successful! Check your email for verification code.",
@@ -167,11 +147,35 @@ const RegisterPage = () => {
               userName: formData.name,
             },
           });
+        } else if (type === "verification_success" && token) {
+          // Direct login after OTP verification
+          localStorage.setItem("token", token);
+          window.dispatchEvent(new Event("authChange"));
+          
+          showNotification(
+            "Email verified successfully! Welcome to AI Task Manager!",
+            "success"
+          );
+          
+          navigate("/dashboard");
+        } else if (type === "registration_complete_with_login" && token) {
+          // Automatic login after registration (no OTP)
+          localStorage.setItem("token", token);
+          window.dispatchEvent(new Event("authChange"));
+          
+          showNotification(
+            "Registration successful! Welcome to AI Task Manager!",
+            "success"
+          );
+          
+          navigate("/dashboard");
         } else {
           // Fallback for old registration flow
-          localStorage.setItem("token", response.data.token);
-          window.dispatchEvent(new Event("authChange"));
-          setShowSuccess(true);
+          if (response.data.token) {
+            localStorage.setItem("token", response.data.token);
+            window.dispatchEvent(new Event("authChange"));
+            setShowSuccess(true);
+          }
         }
       }
     } catch (error) {
