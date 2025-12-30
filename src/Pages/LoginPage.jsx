@@ -104,23 +104,7 @@ const LoginPage = () => {
       let errorMessage = "Login failed. Please check your credentials.";
 
       // Handle specific error types
-      if (errorData?.type === "email_not_verified") {
-        errorMessage = "Please verify your email address before logging in.";
-
-        // Redirect to email verification if userId is provided
-        if (errorData?.userId) {
-          setTimeout(() => {
-            navigate("/verify-email", {
-              state: {
-                userId: errorData.userId,
-                email: formData.email,
-                userName: "User", // We don't have the name from login
-                fromLogin: true,
-              },
-            });
-          }, 2000);
-        }
-      } else if (errorData?.type === "user_not_found") {
+      if (errorData?.type === "user_not_found") {
         errorMessage = "No account found with this email address.";
       } else if (errorData?.type === "invalid_password") {
         errorMessage = "Incorrect password. Please try again.";

@@ -5,7 +5,6 @@ import DashBoard from "./Pages/DashBoard";
 import AddTaskPage from "./Pages/AddTaskPage";
 import LoginPage from "./Pages/LoginPage";
 import RegisterPage from "./Pages/RegisterPage";
-import EmailVerificationPage from "./Pages/EmailVerificationPage";
 import TasksPage from "./Pages/TasksPage";
 import EditTaskPage from "./Pages/EditTaskPage";
 import ProfilePage from "./Pages/ProfilePage";
@@ -69,7 +68,6 @@ const App = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/verify-email" element={<EmailVerificationPage />} />
         {isAuthenticated && (
           <>
             <Route path="/home" element={<DashBoard />} />

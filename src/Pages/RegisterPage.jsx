@@ -130,36 +130,11 @@ const RegisterPage = () => {
         }
       }
 
-      if (response.status === 200) {
-        const { userId, email, type, token, user } = response.data;
+      if (response.status === 200 || response.status === 201) {
+        const { token, user } = response.data;
 
-        if (type === "otp_sent" && userId) {
-          // Redirect to email verification page
-          showNotification(
-            "Registration successful! Check your email for verification code.",
-            "success"
-          );
-
-          navigate("/verify-email", {
-            state: {
-              userId,
-              email,
-              userName: formData.name,
-            },
-          });
-        } else if (type === "verification_success" && token) {
-          // Direct login after OTP verification
-          localStorage.setItem("token", token);
-          window.dispatchEvent(new Event("authChange"));
-
-          showNotification(
-            "Email verified successfully! Welcome to AI Task Manager!",
-            "success"
-          );
-
-          navigate("/dashboard");
-        } else if (type === "registration_complete_with_login" && token) {
-          // Automatic login after registration (no OTP)
+        if (token) {
+          // Store token and redirect to dashboard
           localStorage.setItem("token", token);
           window.dispatchEvent(new Event("authChange"));
 
@@ -170,12 +145,11 @@ const RegisterPage = () => {
 
           navigate("/dashboard");
         } else {
-          // Fallback for old registration flow
-          if (response.data.token) {
-            localStorage.setItem("token", response.data.token);
-            window.dispatchEvent(new Event("authChange"));
-            setShowSuccess(true);
-          }
+          showNotification(
+            "Registration successful! Please log in.",
+            "success"
+          );
+          navigate("/login");
         }
       }
     } catch (error) {
@@ -185,12 +159,7 @@ const RegisterPage = () => {
       let errorMessage = "Registration failed. Please try again.";
 
       // Handle specific error types
-      if (errorData?.type === "domain_not_allowed") {
-        errorMessage =
-          errorData.message ||
-          "Please use a verified email from major providers (Gmail, Yahoo, Outlook, etc.). Temporary emails are not allowed.";
-        setFormErrors({ email: "Invalid email domain" });
-      } else if (errorData?.field) {
+      if (errorData?.field) {
         errorMessage = errorData.message;
         setFormErrors({ [errorData.field]: errorData.message });
       } else {
